@@ -1,0 +1,44 @@
+{
+    "name": "php-queues/rabbitmq-bunny-transport",
+    "description": "RabbitMQ transport implementation using bunny.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "rabbitmq",
+        "bunny",
+        "queue",
+        "amqp"
+    ],
+    "autoload": {
+        "psr-4": {
+            "PhpQueues\\RabbitmqBunnyTransport\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpQueues\\RabbitmqBunnyTransport\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "v.zanfir",
+            "email": "vadimzanfir@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">= 7.4",
+        "php-queues/rabbitmq-transport": "^0.5.3",
+        "bunny/bunny": "^0.5.1"
+    },
+    "require-dev": {
+        "vimeo/psalm": "^4.23",
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "psalm": "./vendor/bin/psalm --no-cache",
+        "test": "./vendor/bin/phpunit --do-not-cache",
+        "all": "./vendor/bin/phpunit --do-not-cache && ./vendor/bin/psalm --no-cache"
+    }
+}
