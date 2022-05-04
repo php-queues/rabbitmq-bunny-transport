@@ -35,6 +35,19 @@ final class BunnyAmqpConnector extends AmqpConnector
         return new BunnyConsumer($this->channel());
     }
 
+    public function stop(): void
+    {
+        if ($this->channel !== null) {
+            $this->channel->close();
+        }
+
+        if ($this->client !== null) {
+            $this->client->disconnect();
+        }
+
+        [$this->channel, $this->client] = [null, null];
+    }
+
     private function channel(): Channel
     {
         if ($this->channel === null) {
