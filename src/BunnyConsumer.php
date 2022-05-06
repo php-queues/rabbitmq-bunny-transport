@@ -14,9 +14,16 @@ final class BunnyConsumer implements Consumer
 {
     private Channel $channel;
 
-    public function __construct(Channel $channel)
+    /**
+     * @psalm-var callable():non-empty-string
+     */
+    private $uuidGenerator;
+
+    public function __construct(Channel $channel, ?callable $uuidGenerator = null)
     {
         $this->channel = $channel;
+        /** @psalm-var callable(): non-empty-string */
+        $this->uuidGenerator = $uuidGenerator ?: fn (): string => \vsprintf('%s%s-%s-%s-%s-%s%s%s', \str_split(\bin2hex(random_bytes(16)), 4));
     }
 
     /**
@@ -48,14 +55,14 @@ final class BunnyConsumer implements Consumer
 
     private function createPackage(Message $message, Channel $channel): AmqpPackage
     {
-        /** @var array{x-trace-id:non-empty-string} $headers */
+        /** @var array{x-trace-id?:non-empty-string} $headers */
         $headers = $message->headers;
 
         /** @psalm-var non-empty-string $content */
         $content = $message->content;
 
         return new AmqpPackage(
-            $headers['x-trace-id'],
+            $headers['x-trace-id'] ?? ($this->uuidGenerator)(),
             $content,
             $headers,
             static function () use ($message, $channel): void {

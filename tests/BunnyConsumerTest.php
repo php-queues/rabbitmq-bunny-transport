@@ -64,4 +64,32 @@ final class BunnyConsumerTest extends TestCase
         self::assertEquals('{"name": "test"}', $package->content());
         $package->nack(false);
     }
+
+    public function testPackageWithDefaultId(): void
+    {
+        $channel = $this->createMock(Channel::class);
+
+        $channel
+            ->expects($this->exactly(1))
+            ->method('get')
+            ->with('test')
+            ->willReturn(new Message(\uniqid('consumer-tag'), \uniqid('delivery-tag'), false, 'test', 'test', [], '{"name": "test"}'))
+        ;
+
+        /** @psalm-var non-empty-string $id */
+        $id = \uniqid();
+
+        $channel
+            ->expects($this->exactly(1))
+            ->method('nack');
+
+        $consumer = new BunnyConsumer($channel, fn (): string => $id);
+        $package = $consumer->once('test');
+
+        self::assertInstanceOf(AmqpPackage::class, $package);
+        self::assertEquals($id, $package->id());
+        self::assertEmpty($package->headers());
+        self::assertEquals('{"name": "test"}', $package->content());
+        $package->nack(false);
+    }
 }
