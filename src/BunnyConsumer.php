@@ -19,6 +19,9 @@ final class BunnyConsumer implements Consumer
      */
     private $uuidGenerator;
 
+    /**
+     * @psalm-param (callable():non-empty-string)|null $uuidGenerator
+     */
     public function __construct(Channel $channel, ?callable $uuidGenerator = null)
     {
         $this->channel = $channel;
