@@ -69,6 +69,8 @@ final class BunnyAmqpConnector extends AmqpConnector
                 'vhost' => $options['vhost'] ?? '/',
                 'user' => $options['user'] ?? 'guest',
                 'password' => $options['password'] ?? 'guest',
+                'heartbeat' => $options['heartbeat'] ?? 60.0,
+                'timeout' => $options['timeout'] ?? 1,
             ];
 
             if ($options['scheme'] === 'amqps') {
